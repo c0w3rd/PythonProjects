@@ -1,0 +1,147 @@
+import random
+
+print("Welcome to c0w3rd's Python Knuckebones!!")
+print("Setting up now...")
+
+totalscore = 0
+
+def init():
+    #Group 1
+    global g1c1
+    g1c1 = [0, 0, 0]
+    global g1c2
+    g1c2 = [0, 0, 0]
+    global g1c3
+    g1c3 = [0, 0, 0]
+    global g1ctotals
+    g1ctotals = [0, 0, 0]
+    #Group 2
+    global g2c1
+    g2c1 = [0, 0, 0]
+    global g2c2
+    g2c2 = [0, 0, 0]
+    global g2c3
+    g2c3 = [0, 0, 0]
+    global g2ctotals
+    g2ctotals = [0, 0, 0]
+
+    global ticker
+    global oppticker
+    ticker = 2
+    oppticker = 1
+
+    global spotid
+    global oppspotid
+    spotid = 0
+    oppspotid = 0
+
+init()
+
+def roll():
+    return random.randint(1, 6)
+
+def calcTotalScore(x, y, z, t):
+    #Column 1
+    if x[0] == x[1] and x[0] == x[2]:
+        t[0] = x[0] * x[1] * x[2]
+    elif x[0] == x[1]:
+        t[0] = (x[0] * x[1]) + x[2]
+    elif x[1] == x[2]:
+        t[0] = x[0] + (x[1] * x[2])
+    elif x[0] == x[2]:
+        t[0] = (x[0] * x[2]) + x[1]
+    else:
+        t[0] = x[0] + x[1] + x[2]
+    #Column 2
+    if y[0] == y[1] and y[0] == y[2]:
+        t[1] = y[0] * y[1] * y[2]
+    elif y[0] == y[1]:
+        t[1] = (y[0] * y[1]) + y[2]
+    elif y[1] == y[2]:
+        t[1] = y[0] + (y[1] * y[2])
+    elif y[0] == y[2]:
+        t[1] = (y[0] * y[2]) + y[1]
+    else:
+        t[1] = y[0] + y[1] + y[2]
+    #Column 3
+    if z[0] == z[1] and z[0] == z[2]:
+        t[2] = z[0] * z[1] * z[2]
+    elif z[0] == z[1]:
+        t[2] = (z[0] * z[1]) + z[2]
+    elif z[1] == z[2]:
+        t[2] = z[0] + (z[1] * z[2])
+    elif z[0] == z[2]:
+        t[2] = (z[0] * z[2]) + z[1]
+    else:
+        t[2] = z[0] + z[1] + z[2]
+
+def printBoard(): 
+    print(str(g1c1[0]) + " " + str(g1c2[0]) + " " + str(g1c3[0]))
+    print(str(g1c1[1]) + " " + str(g1c2[1]) + " " + str(g1c3[1]))
+    print(str(g1c1[2]) + " " + str(g1c2[2]) + " " + str(g1c3[2]))
+    print("▲▲▲▲▲")
+    print(str(g1ctotals[0]) + " " + str(g1ctotals[1]) + " " + str(g1ctotals[2]) + " = " + str(sum(g1ctotals)))
+    print("-----" + str(sum(g1ctotals) - sum(g2ctotals)))
+    print(str(g2ctotals[0]) + " " + str(g2ctotals[1]) + " " + str(g2ctotals[2]) + " = " + str(sum(g2ctotals)))
+    print("▼▼▼▼▼")
+    print(str(g2c1[2]) + " " + str(g2c2[2]) + " " + str(g2c3[2]))
+    print(str(g2c1[1]) + " " + str(g2c2[1]) + " " + str(g2c3[1]))
+    print(str(g2c1[0]) + " " + str(g2c2[0]) + " " + str(g2c3[0]))
+
+
+#Game loop
+while True:
+    
+    if ticker == 2:
+        ticker = 1
+        oppticker = 2
+    else:
+        ticker = 2
+        oppticker = 1
+
+    print("It is player " + str(ticker) + "'s turn")
+
+    currentRoll = roll()
+
+    print("Where do you want your " + str(currentRoll) + " to go?")
+
+    spot = int(input("Column 1, 2, or 3? : "))
+    spot = spot - 1
+
+    exec("spotid = g" + str(ticker) + "c" + str(spot + 1))
+    exec("oppspotid = g" + str(oppticker) + "c" + str(spot + 1))
+
+    if spotid[2] == 0:
+        spotid[2] = currentRoll
+    elif spotid[1] == 0:
+        spotid[1] = currentRoll
+    else:
+        spotid[0] = currentRoll
+
+    for x in spotid:
+        if x != 0 and x in oppspotid:
+            oppspotid.remove(x)
+        while len(oppspotid) != 3:
+            oppspotid.append(0)
+    
+    if 0 not in g1c1 and 0 not in g1c2 and 0 not in g1c3:
+        print("Game over!!")
+        if g1ctotals.sum() > g2ctotals.sum():
+            print("Player 1 won!")
+        elif g2ctotals.sum() > g1ctotals.sum():
+            print("Player 2 won!")
+        else:
+            print("Tie game!")
+    elif 0 not in g2c1 and 0 not in g2c2 and 0 not in g2c3:
+        print("Game over!!")
+        if g1ctotals.sum() > g2ctotals.sum():
+            print("Player 1 won!")
+        elif g2ctotals.sum() > g1ctotals.sum():
+            print("Player 2 won!")
+        else:
+            print("Tie game!")
+
+    calcTotalScore(g1c1, g1c2, g1c3, g1ctotals)
+    calcTotalScore(g2c1, g2c2, g2c3, g2ctotals)
+    printBoard()
+
