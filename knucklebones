@@ -115,8 +115,8 @@ while True:
         spotid[2] = currentRoll
     elif spotid[1] == 0:
         spotid[1] = currentRoll
-    else:
-        spotid[0] = currentRoll
+        elif spotid[0] == 0:
+            spotid[0] = currentRoll
 
     for x in spotid:
         if x != 0 and x in oppspotid:
