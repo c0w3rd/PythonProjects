@@ -81,7 +81,7 @@ def printBoard():
     print(str(g1c1[2]) + " " + str(g1c2[2]) + " " + str(g1c3[2]))
     print("▲▲▲▲▲")
     print(str(g1ctotals[0]) + " " + str(g1ctotals[1]) + " " + str(g1ctotals[2]) + " = " + str(sum(g1ctotals)))
-    print("-----" + str(sum(g1ctotals) - sum(g2ctotals)))
+    print("-----    : " + str(sum(g1ctotals) - sum(g2ctotals)))
     print(str(g2ctotals[0]) + " " + str(g2ctotals[1]) + " " + str(g2ctotals[2]) + " = " + str(sum(g2ctotals)))
     print("▼▼▼▼▼")
     print(str(g2c1[2]) + " " + str(g2c2[2]) + " " + str(g2c3[2]))
@@ -92,6 +92,8 @@ def printBoard():
 #Game loop
 while True:
     
+    whatthefuck = 0
+
     if ticker == 2:
         ticker = 1
         oppticker = 2
@@ -105,43 +107,59 @@ while True:
 
     print("Where do you want your " + str(currentRoll) + " to go?")
 
-    spot = int(input("Column 1, 2, or 3? : "))
-    spot = spot - 1
+    tryspot = int(input("Column 1, 2, or 3? : "))
+    if tryspot <= 3 and tryspot >= 0:
+        spot = tryspot - 1
+    else:
+        print("oops! that's not 1, 2, or 3 :3")
+        whatthefuck = 1
+    
+    if whatthefuck == 0:
 
-    exec("spotid = g" + str(ticker) + "c" + str(spot + 1))
-    exec("oppspotid = g" + str(oppticker) + "c" + str(spot + 1))
+        exec("spotid = g" + str(ticker) + "c" + str(spot + 1))
+        exec("oppspotid = g" + str(oppticker) + "c" + str(spot + 1))
 
-    if spotid[2] == 0:
-        spotid[2] = currentRoll
-    elif spotid[1] == 0:
-        spotid[1] = currentRoll
+        if spotid[2] == 0:
+            spotid[2] = currentRoll
+        elif spotid[1] == 0:
+            spotid[1] = currentRoll
         elif spotid[0] == 0:
             spotid[0] = currentRoll
+        else:
+            print("Not valid! Pick a spot with a 0 in it next time")
+            print("I'm skipping your turn :3")
 
-    for x in spotid:
-        if x != 0 and x in oppspotid:
-            oppspotid.remove(x)
-        while len(oppspotid) != 3:
-            oppspotid.append(0)
-    
-    if 0 not in g1c1 and 0 not in g1c2 and 0 not in g1c3:
-        print("Game over!!")
-        if g1ctotals.sum() > g2ctotals.sum():
-            print("Player 1 won!")
-        elif g2ctotals.sum() > g1ctotals.sum():
-            print("Player 2 won!")
-        else:
-            print("Tie game!")
-    elif 0 not in g2c1 and 0 not in g2c2 and 0 not in g2c3:
-        print("Game over!!")
-        if g1ctotals.sum() > g2ctotals.sum():
-            print("Player 1 won!")
-        elif g2ctotals.sum() > g1ctotals.sum():
-            print("Player 2 won!")
-        else:
-            print("Tie game!")
+        for x in range(3):
+            for x in spotid:
+                if x != 0 and x in oppspotid:
+                    oppspotid.remove(x)
+                while len(oppspotid) != 3:
+                    oppspotid.append(0)
 
     calcTotalScore(g1c1, g1c2, g1c3, g1ctotals)
     calcTotalScore(g2c1, g2c2, g2c3, g2ctotals)
     printBoard()
-
+    
+    if 0 not in g1c1 and 0 not in g1c2 and 0 not in g1c3:
+        print("Game over!!")
+        if sum(g1ctotals) > sum(g2ctotals):
+            print("Player 1 won!")
+            quit()
+        elif sum(g2ctotals) > sum(g1ctotals):
+            print("Player 2 won!")
+            quit()
+        else:
+            print("Tie game!")
+            quit()
+        
+    elif 0 not in g2c1 and 0 not in g2c2 and 0 not in g2c3:
+        print("Game over!!")
+        if sum(g1ctotals) > sum(g2ctotals):
+            print("Player 1 won!")
+            quit()
+        elif sum(g2ctotals) > sum(g1ctotals):
+            print("Player 2 won!")
+            quit()
+        else:
+            print("Tie game!")
+            quit()
